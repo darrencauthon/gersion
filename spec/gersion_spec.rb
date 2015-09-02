@@ -595,6 +595,12 @@ EOF
       end
     end
 
+    describe "a gem it cannot find" do
+      it "should return nil" do
+        Gersion.version_of('lskdjflskdjflksdjflksdjflksdjf').nil?.must_equal true
+      end
+    end
+
   end
 
 end
