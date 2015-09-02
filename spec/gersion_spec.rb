@@ -589,6 +589,12 @@ EOF
       end
     end
 
+    describe "using the revision when there is no tag" do
+      it "should be able to pick out the revision for abc" do
+        Gersion.version_of('abc').must_equal '6eab6b7c3774ac63cc719c8af2ded6d447d0a378'
+      end
+    end
+
   end
 
 end

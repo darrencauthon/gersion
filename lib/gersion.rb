@@ -13,8 +13,11 @@ module Gersion
     git_match = gemlock_content.split('GEM')[0].split('GIT').reject { |x| x.scan(regex)[0].nil? }.first
     if git_match
       tag_regex = /tag: (.*)/
-      if tag_result = git_match.scan(tag_regex)[0][0]
+      tag_result = git_match.scan(tag_regex)[0] ? git_match.scan(tag_regex)[0][0] : nil
+      if tag_result
         return tag_result
+      elsif revision_result = git_match.scan(/revision: (.*)/)[0][0]
+        return revision_result
       end
     end
     gemlock_content.scan(regex)[0][0]
