@@ -1,5 +1,5 @@
-require "gersion/bash"
-require "gersion/version"
+require_relative "gersion/bash"
+require_relative "gersion/version"
 
 module Gersion
 
