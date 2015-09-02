@@ -10,11 +10,22 @@ module Gersion
 
   def self.version_of gem
     regex = Regexp.new("  #{gem} \\(([01234567890\.]*)\\)")
-    File.open('Gemfile.lock').read.scan(regex)[0][0]
+    git_match = gemlock_content.split('GEM')[0].split('GIT').reject { |x| x.scan(regex)[0].nil? }.first
+    if git_match
+      tag_regex = /tag: (.*)/
+      if tag_result = git_match.scan(tag_regex)[0][0]
+        return tag_result
+      end
+    end
+    gemlock_content.scan(regex)[0][0]
   end
 
   class << self
     private
+
+    def gemlock_content
+      @gemlock_content ||= Gersion::File.read('Gemfile.lock')
+    end
 
     def the_current_tag
       Gersion::Bash.run('git tag --points-at HEAD').split("\n")[0]

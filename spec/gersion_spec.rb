@@ -572,7 +572,7 @@ EOF
     end
 
     before do
-      Gersion::File.stubs(:open).with('Gemfile.lock').returns Struct.new(:read).new(gemlock_contents)
+      Gersion::File.stubs(:read).with('Gemfile.lock').returns gemlock_contents
     end
 
     it "should be able to pick out the version of rails" do
@@ -581,6 +581,12 @@ EOF
 
     it "should be able to pick out the version of zip" do
       Gersion.version_of('zip').must_equal '2.0.2'
+    end
+
+    describe "picking out the tag as a version" do
+      it "should be able to pick out the tag for oiu" do
+        Gersion.version_of('oiu').must_equal '1.0.0'
+      end
     end
 
   end
