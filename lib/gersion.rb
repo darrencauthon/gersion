@@ -12,15 +12,11 @@ module Gersion
     regex = Regexp.new("  #{gem} \\(([01234567890\.]*)\\)")
     git_match = gemlock_content.split('GEM')[0].split('GIT').reject { |x| x.scan(regex)[0].nil? }.first
     if git_match
-      tag_regex = /tag: (.*)/
-      tag_result = git_match.scan(tag_regex)[0] ? git_match.scan(tag_regex)[0][0] : nil
-      if tag_result
-        return tag_result
-      elsif revision_result = git_match.scan(/revision: (.*)/)[0][0]
-        return revision_result
+      if result = find_the_match_between(git_match, /tag: (.*)/) || find_the_match_between(git_match, /revision: (.*)/)
+        return result
       end
     end
-    gemlock_content.scan(regex)[0][0]
+    find_the_match_between gemlock_content, regex
   end
 
   class << self
@@ -28,6 +24,12 @@ module Gersion
 
     def gemlock_content
       @gemlock_content ||= Gersion::File.read('Gemfile.lock')
+    end
+
+    def find_the_match_between content, regex
+      content.scan(regex)[0][0]
+    rescue
+      nil
     end
 
     def the_current_tag
