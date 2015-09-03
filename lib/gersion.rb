@@ -9,17 +9,23 @@ module Gersion
   end
 
   def self.version_of gem
-    regex = Regexp.new("  #{gem} \\(([01234567890\.]*)\\)")
-    if git_match = gemlock_content.split('GEM')[0].split('GIT').reject { |x| x.scan(regex)[0].nil? }.first
+    if git_match = gemlock_content.split('GEM')[0].split('GIT').select { |c| find_gem_version_in_content(gem, c) }.first
       if result = find_the_match_between(git_match, /tag: (.*)/) || find_the_match_between(git_match, /revision: (.*)/)
         return result
       end
     end
-    find_the_match_between gemlock_content, regex
+    find_gem_version_in_content gem, gemlock_content
   end
 
   class << self
     private
+
+    def find_gem_version_in_content gem, content
+      regex = Regexp.new("  #{gem} \\(([01234567890\.]*)\\)")
+      find_the_match_between content, regex
+    rescue
+      nil
+    end
 
     def gemlock_content
       @gemlock_content ||= Gersion::File.read('Gemfile.lock')
