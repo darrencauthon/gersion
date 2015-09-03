@@ -4,9 +4,9 @@ Look up the version of your Ruby application and any Ruby gems.
 
 This gem assumes and requires the common Ruby setup, like:
 
-  1) Your project uses git,
-  2) Your server has git installed (no Heroku?), and
-  3) You use Bundler with a Gemfile.lock file in your app's root.
+  * Your project uses git,
+  * Your server has git installed (no Heroku?), and
+  * You use Bundler with a Gemfile.lock file in your app's root.
 
 The idea is that you could create a way to report back this information in your application... like a SHA key in the footer of your web app's HTML.
 
