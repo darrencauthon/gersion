@@ -9,16 +9,21 @@ module Gersion
   end
 
   def self.version_of gem
-    if git_match = gemlock_content.split('GEM')[0].split('GIT').select { |c| find_gem_version_in_content(gem, c) }.first
-      if result = find_the_match_between(git_match, /tag: (.*)/) || find_the_match_between(git_match, /revision: (.*)/)
-        return result
-      end
-    end
-    find_gem_version_in_content gem, gemlock_content
+    find_the_gem_in_the_git_repos_section(gem) || find_the_gem_in_the_rubygems_section(gem)
   end
 
   class << self
     private
+
+    def find_the_gem_in_the_git_repos_section gem
+      if git_match = gemlock_content.split('GEM')[0].split('GIT').select { |c| find_gem_version_in_content(gem, c) }.first
+        find_the_match_between(git_match, /tag: (.*)/) || find_the_match_between(git_match, /revision: (.*)/)
+      end
+    end
+
+    def find_the_gem_in_the_rubygems_section gem
+      find_gem_version_in_content gem, gemlock_content
+    end
 
     def find_gem_version_in_content gem, content
       regex = Regexp.new("  #{gem} \\(([01234567890\.]*)\\)")
