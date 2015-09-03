@@ -10,8 +10,7 @@ module Gersion
 
   def self.version_of gem
     regex = Regexp.new("  #{gem} \\(([01234567890\.]*)\\)")
-    git_match = gemlock_content.split('GEM')[0].split('GIT').reject { |x| x.scan(regex)[0].nil? }.first
-    if git_match
+    if git_match = gemlock_content.split('GEM')[0].split('GIT').reject { |x| x.scan(regex)[0].nil? }.first
       if result = find_the_match_between(git_match, /tag: (.*)/) || find_the_match_between(git_match, /revision: (.*)/)
         return result
       end
